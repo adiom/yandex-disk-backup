@@ -1,16 +1,24 @@
 #!/usr/bin/env bash
 
+FILESUFFIX="$( \date +"%Y-%m-%d")"
+
 MYSQLDUMP="$( \which mysqldump 2>/dev/null )"
 MYSQLDUMPOPTS="diaspora_production"
-DUMPDATE="$( \date +"%Y-%m-%d")"
-DUMPNAME="diaspora_production_$DUMPDATE.sql.asc"
-TARNAME="amalgama_$DUMPDATE.tar"
+DUMPNAME="diaspora_production_$FILESUFFIX.sql.gpg"
 
-${MYSQLDUMP} ${MYSQLDUMPOPTS} | gpg --encrypt -r support@canfly.org > ${DUMPNAME}
 
-tar cvz /home/diaspora/amalgama/| gpg --encrypt -r "support@canfly.org" > ${TARNAME}.gpg
+TAR="$( \which tar 2>/dev/null )"
+TAROPTS="-cz /home/diaspora/amalgama/"
+TARNAME="amalgama_$FILESUFFIX.tar.gpg"
+
+GPGCLI="gpg --encrypt -r support@canfly.org"
+
+${MYSQLDUMP} ${MYSQLDUMPOPTS} | ${GPGCLI} > ${DUMPNAME}
+
+${TAR} ${TAROPTS} | ${GPGCLI} > ${TARNAME}
 
 ./go.sh ${DUMPNAME}
-./go.sh ${TARNAME}.gpg
+./go.sh ${TARNAME}
 
-#rm -f $(DUMPNAME)
+rm -f ${DUMPNAME}
+rm -f ${TARNAME}
