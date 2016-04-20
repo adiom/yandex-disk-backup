@@ -8,7 +8,7 @@ DUMPNAME="diaspora_production_$FILESUFFIX.sql.gpg"
 
 
 TAR="$( \which tar 2>/dev/null )"
-TAROPTS="-cz /home/diaspora/amalgama/"
+TAROPTS="-cz /home/diaspora/amalgama"
 TARNAME="amalgama_$FILESUFFIX.tar.gpg"
 
 GPGCLI="gpg --encrypt -r support@canfly.org"
